@@ -1,9 +1,14 @@
-# 🥔 Potato Dungeons Fork
+# 🥔 Potato Dungeons Kimi
 
-Enhanced fork of Potato Dungeons — a roguelike dungeon crawler built with vanilla JS & HTML5 Canvas.
+Enhanced fork of Potato Dungeons — a roguelike dungeon crawler built with vanilla JS & HTML5 Canvas, polished as the Kimi Edition.
 
-## Features (v0.9)
+## Features (v1.0.0-kimi)
 
+- ✅ Kimi Edition Branding & Versionierung
+- ✅ Aufgeräumter, konsistenter Code-Grundstock
+- ✅ Verbesserte Mobile-UX mit besserem Touch-Feedback
+- ✅ Polierte UI mit einheitlichem Farbschema
+- ✅ Saubere CSS-Variablen-Grundlage für zukünftiges Theming
 - ✅ Bug-Fix: rewards.js Template-Literal
 - ✅ Dash ability (Space / Double-Tap)
 - ✅ Relics as 4th reward type (6 relics)
@@ -46,7 +51,7 @@ Enhanced fork of Potato Dungeons — a roguelike dungeon crawler built with vani
 
 ## Live Demo
 
-[https://ml-bets.com/potato-dungeons-fork/](https://ml-bets.com/potato-dungeons-fork/)
+[https://ml-bets.com/potato-dungeons-kimi/](https://ml-bets.com/potato-dungeons-kimi/)
 
 ## Original
 
