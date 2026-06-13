@@ -6,6 +6,10 @@ const Game = {
   player: null,
   pendingReward: null,
   lastTime: 0,
+  _fpsAcc: 0,
+  _fpsFrames: 0,
+  _fpsValue: 0,
+  debugFps: false,
   xpOrbs: [],
   multiplayerDoorTriggered: false,
   _mpSyncTimer: 0,
@@ -304,13 +308,27 @@ const Game = {
 
   loop(timestamp) {
     requestAnimationFrame(t => this.loop(t));
-    const dt = Math.min((timestamp - this.lastTime) / 1000, 0.05);
+    let dt = (timestamp - this.lastTime) / 1000;
+    dt = Math.min(dt, 0.1);
     this.lastTime = timestamp;
+    if (this.debugFps) this._updateFps(dt);
     if (this.state === 'PLAYING') this.update(dt);
     else if (this.state === 'REWARD') this.updateReward(dt);
-    this.render();
+    this.render(dt);
     // Always update MP debug overlay (even outside PLAYING/REWARD states)
     this._updateMpDebug();
+  },
+
+  _updateFps(dt) {
+    this._fpsAcc += dt;
+    this._fpsFrames++;
+    if (this._fpsAcc >= 0.5) {
+      this._fpsValue = Math.round(this._fpsFrames / this._fpsAcc);
+      this._fpsAcc = 0;
+      this._fpsFrames = 0;
+      const el = document.getElementById('debug-fps');
+      if (el) el.textContent = this._fpsValue + ' FPS';
+    }
   },
 
   update(dt) {
@@ -581,7 +599,7 @@ const Game = {
     }
   },
 
-  render() {
+  render(dt) {
     const ctx = Renderer.ctx;
     if (!ctx) return;
     const camera = Renderer.getCameraWithShake();

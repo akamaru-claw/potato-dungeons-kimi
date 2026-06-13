@@ -6,11 +6,22 @@ const SFX = {
   masterVolume: 0.3,
   enabled: true,
 
+  // Lazy init: AudioContext is created on first user interaction
   init() {
+    // this.ctx remains null until ensureContext() is called
+  },
+
+  ensureContext() {
+    if (this.ctx) return true;
+    if (!this.enabled) return false;
     try {
-      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) { this.enabled = false; return false; }
+      this.ctx = new Ctx();
+      return true;
     } catch (e) {
       this.enabled = false;
+      return false;
     }
   },
 
@@ -25,6 +36,7 @@ const SFX = {
   },
 
   shoot(pitch = 1) {
+    this.ensureContext();
     this._play(ctx => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -39,6 +51,7 @@ const SFX = {
   },
 
   shotgun() {
+    this.ensureContext();
     this._play(ctx => {
       const bufferSize = ctx.sampleRate * 0.1;
       const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
@@ -55,6 +68,7 @@ const SFX = {
   },
 
   hit() {
+    this.ensureContext();
     this._play(ctx => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -69,6 +83,7 @@ const SFX = {
   },
 
   enemyDie() {
+    this.ensureContext();
     this._play(ctx => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -83,6 +98,7 @@ const SFX = {
   },
 
   playerHit() {
+    this.ensureContext();
     this._play(ctx => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -97,6 +113,7 @@ const SFX = {
   },
 
   levelUp() {
+    this.ensureContext();
     this._play(ctx => {
       const notes = [523, 659, 784, 1047];
       notes.forEach((freq, i) => {
@@ -115,6 +132,7 @@ const SFX = {
   },
 
   purchase() {
+    this.ensureContext();
     this._play(ctx => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -129,6 +147,7 @@ const SFX = {
   },
 
   waveStart() {
+    this.ensureContext();
     this._play(ctx => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -143,6 +162,7 @@ const SFX = {
   },
 
   melee() {
+    this.ensureContext();
     this._play(ctx => {
       const bufferSize = ctx.sampleRate * 0.08;
       const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
@@ -161,6 +181,7 @@ const SFX = {
   },
 
   xpCollect() {
+    this.ensureContext();
     this._play(ctx => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -174,6 +195,7 @@ const SFX = {
   },
 
   gameOver() {
+    this.ensureContext();
     this._play(ctx => {
       const notes = [400, 350, 300, 200];
       notes.forEach((freq, i) => {
@@ -191,6 +213,7 @@ const SFX = {
   },
 
   victory() {
+    this.ensureContext();
     this._play(ctx => {
       const notes = [523, 659, 784, 1047, 784, 1047, 1319];
       notes.forEach((freq, i) => {

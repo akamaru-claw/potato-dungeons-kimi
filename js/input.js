@@ -133,6 +133,7 @@ const Input = {
     });
     canvas.addEventListener('mousedown', e => {
       this.mouse.down = true;
+      SFX.ensureContext();
       const rect = canvas.getBoundingClientRect();
       this.mouse.x = (e.clientX - rect.left) * (canvas.width / rect.width);
       this.mouse.y = (e.clientY - rect.top) * (canvas.height / rect.height);
@@ -157,6 +158,7 @@ const Input = {
 
   _onTouchStart(e) {
     e.preventDefault();
+    SFX.ensureContext();
     if (Game.state !== 'PLAYING' && Game.state !== 'PAUSED') return;
 
     // Detect pinch start: 2+ fingers already on screen

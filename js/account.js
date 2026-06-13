@@ -132,7 +132,7 @@ const Account = {
       const data = await res.json();
       if (data.ok) {
         this.username = username;
-        this.gold = data.gold || 0;
+        this.gold = data.gold ?? 0;
         this.skin = data.skin || 'potato_default';
         this.trail = data.trail || '';
         this.selectedCharacter = data.selectedCharacter || data.selected_character || 'potato_default';
