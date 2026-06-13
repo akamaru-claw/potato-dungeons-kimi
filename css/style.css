@@ -251,7 +251,12 @@ body.boss-announce { animation: bossShake 0.6s ease; }
   gap: 6px;
   z-index: 50;
   pointer-events: auto;
+  max-width: calc(100vw - 180px);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
+.weapon-bar::-webkit-scrollbar { display: none; }
 .weapon-bar-item {
   display: flex;
   align-items: center;
@@ -263,6 +268,14 @@ body.boss-announce { animation: bossShake 0.6s ease; }
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
   -webkit-tap-highlight-color: transparent;
+  flex: 0 0 auto;
+}
+@media (max-width: 600px) {
+  .weapon-bar { gap: 4px; max-width: calc(100vw - 168px); }
+  .weapon-bar-item { padding: 4px 6px; border-radius: 8px; }
+  .weapon-bar-icon { font-size: 15px; }
+  .weapon-bar-level { font-size: 9px; min-width: 13px; padding: 1px 3px; }
+  .weapon-bar-name { font-size: 9px; max-width: 36px; }
 }
 .weapon-bar-item:hover, .weapon-bar-item:active {
   background: rgba(167, 139, 250, 0.25);
@@ -520,6 +533,15 @@ body.boss-announce { animation: bossShake 0.6s ease; }
 
 /* HUD */
 .hud { position: fixed; top: 0; left: 0; right: 0; z-index: 50; padding: max(8px, env(safe-area-inset-top)) 12px 8px; pointer-events: none; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px; }
+@media (max-width: 600px) {
+  .hud { gap: 4px; padding: max(6px, env(safe-area-inset-top)) 8px 6px; }
+  .hud-hp { min-width: 100px; }
+  .hud-hp-bar { height: 14px; border-radius: 7px; }
+  .hud-hp-text { font-size: 9px; }
+  .hud-stats { font-size: 10px; gap: 6px; }
+  .hud-xp { height: 6px; }
+  .syn-badge, .relic-badge { font-size: 13px; padding: 1px 3px; }
+}
 .hud-hp { display: flex; align-items: center; gap: 6px; min-width: 140px; }
 .hud-hp-bar { flex: 1; height: 18px; background: rgba(0,0,0,0.5); border-radius: 9px; overflow: hidden; border: 1px solid rgba(255,255,255,0.15); position: relative; }
 .hud-hp-fill { height: 100%; transition: width 0.2s, background 0.3s; border-radius: 9px; min-width: 0%; }
@@ -537,29 +559,38 @@ body.boss-announce { animation: bossShake 0.6s ease; }
 .syn-badge, .relic-badge { font-size: 16px; padding: 2px 4px; background: rgba(0,0,0,0.3); border-radius: 6px; cursor: default; }
 .relic-badge { background: rgba(100,50,200,0.3); }
 
-/* DASH INDICATOR */
-.mobile-dash-btn {
+/* MOBILE ACTION BUTTONS (Dash & Attack) */
+.mobile-dash-btn, .mobile-attack-btn {
   position: fixed;
-  bottom: max(60px, env(safe-area-inset-bottom) + 52px);
-  left: 15px;
-  width: 56px; height: 56px;
+  right: max(12px, env(safe-area-inset-right) + 4px);
+  width: 72px; height: 72px;
+  min-width: 72px; min-height: 72px;
   border-radius: 50%;
-  border: 2px solid rgba(120,200,255,0.8);
-  background: rgba(60,100,200,0.6);
+  border: 2px solid rgba(255,255,255,0.35);
   color: #fff;
-  font-size: 24px;
-  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  display: none;
+  align-items: center;
+  justify-content: center;
   z-index: 60;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  transition: transform 0.1s, opacity 0.2s;
+  transition: transform 0.1s, opacity 0.2s, background 0.2s;
   pointer-events: auto;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.45);
 }
-.mobile-dash-btn:active { transform: scale(0.92); }
+.mobile-dash-btn { bottom: max(102px, env(safe-area-inset-bottom) + 86px); background: rgba(60,120,220,0.72); }
+.mobile-attack-btn { bottom: max(16px, env(safe-area-inset-bottom) + 4px); background: rgba(220,60,80,0.72); }
+.mobile-dash-btn:active, .mobile-attack-btn:active { transform: scale(0.92); }
 .mobile-dash-btn.cooldown {
   border-color: rgba(255,255,255,0.2);
-  background: rgba(40,50,80,0.5);
-  color: #7788aa;
+  background: rgba(40,60,100,0.55);
+  color: #aabbdd;
+}
+.mobile-attack-btn.cooldown {
+  border-color: rgba(255,255,255,0.2);
+  background: rgba(90,40,50,0.55);
+  color: #dd99aa;
 }
 .mobile-dash-btn .cd-overlay {
   position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -584,8 +615,8 @@ body.boss-announce { animation: bossShake 0.6s ease; }
 
 /* Mobile Joystick */
 .joystick-container { position: fixed; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; z-index: 40; }
-.joystick-base { position: absolute; width: 110px; height: 110px; border-radius: 50%; background: rgba(255,255,255,0.06); border: 2px solid rgba(255,255,255,0.12); backdrop-filter: blur(4px); transform: translate(-50%, -50%); transition: opacity 0.15s; }
-.joystick-knob { position: absolute; width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.3); backdrop-filter: blur(4px); transform: translate(-50%, -50%); box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: opacity 0.15s; }
+.joystick-base { position: absolute; width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.08); border: 2px solid rgba(167,139,250,0.35); backdrop-filter: blur(4px); transform: translate(-50%, -50%); transition: opacity 0.15s; box-shadow: 0 0 24px rgba(167,139,250,0.15); }
+.joystick-knob { position: absolute; width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,0.22); border: 2px solid rgba(255,255,255,0.45); backdrop-filter: blur(4px); transform: translate(-50%, -50%); box-shadow: 0 4px 14px rgba(0,0,0,0.4), inset 0 0 12px rgba(167,139,250,0.25); transition: opacity 0.15s; }
 
 /* Toast Notifications */
 .toast-container { position: fixed; bottom: max(20px, env(safe-area-inset-bottom) + 8px); right: max(16px, env(safe-area-inset-right)); z-index: 200; display: flex; flex-direction: column; gap: 8px; pointer-events: none; max-width: 320px; }

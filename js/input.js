@@ -24,6 +24,9 @@ const Input = {
   },
 
   _checkWeaponSlotClick(screenX, screenY) {
+    // If weapon-bar is rendered via DOM (new UI), let pointer events pass through
+    const bar = document.getElementById('weapon-bar');
+    if (bar && bar.style.display !== 'none') return false;
     if (!Game.player || !Game.player.weapons || Game.player.weapons.length === 0) return false;
     const isMobile = this.isMobile();
     const slotSize = isMobile ? 46 : 42;
@@ -85,13 +88,12 @@ const Input = {
     return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   },
 
-  init(canvas) {
-    this._canvas = canvas;
-
-    // Mobile dash button handler (DOM element, much more reliable than canvas hit-testing)
+  // Mobile dash + attack button handlers
+  _initMobileButtons() {
     const dashBtn = document.getElementById('mobile-dash-btn');
+    const attackBtn = document.getElementById('mobile-attack-btn');
     if (dashBtn) {
-      dashBtn.addEventListener('touchstart', e => {
+      const dashStart = (e) => {
         e.preventDefault();
         if (Game.state === 'PLAYING' && Game.player) {
           if (Game.player.dashCooldown <= 0) {
@@ -101,18 +103,35 @@ const Input = {
             UI.showToast(`Dash: ${(Game.player.dashCooldown).toFixed(1)}s`, 'error');
           }
         }
-      }, { passive: false });
-      dashBtn.addEventListener('mousedown', e => {
+      };
+      dashBtn.addEventListener('touchstart', dashStart, { passive: false });
+      dashBtn.addEventListener('mousedown', dashStart);
+    }
+    if (attackBtn) {
+      const attackStart = (e) => {
         e.preventDefault();
         if (Game.state === 'PLAYING' && Game.player) {
-          if (Game.player.dashCooldown <= 0) {
-            Game.player.dash();
-          } else {
-            UI.showToast(`Dash: ${(Game.player.dashCooldown).toFixed(1)}s`, 'error');
-          }
+          this.attack = true;
+          if (navigator.vibrate) navigator.vibrate(15);
         }
-      });
+      };
+      const attackEnd = (e) => {
+        e.preventDefault();
+        this.attack = false;
+      };
+      attackBtn.addEventListener('touchstart', attackStart, { passive: false });
+      attackBtn.addEventListener('touchend', attackEnd, { passive: false });
+      attackBtn.addEventListener('touchcancel', attackEnd, { passive: false });
+      attackBtn.addEventListener('mousedown', attackStart);
+      attackBtn.addEventListener('mouseup', attackEnd);
+      attackBtn.addEventListener('mouseleave', attackEnd);
     }
+  },
+
+  init(canvas) {
+    this._canvas = canvas;
+    this._initMobileButtons();
+
     window.addEventListener('keydown', e => {
       this.keys[e.code] = true;
       if (['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Escape'].includes(e.code)) e.preventDefault();
@@ -184,7 +203,8 @@ const Input = {
       const tx = t.clientX - rect.left;
       const ty = t.clientY - rect.top;
 
-      // Check if touch hits a weapon slot or dash button — if so, DON'T register as joystick/aim
+      // Skip touches that hit mobile action buttons or weapon-bar items
+      if (this._touchHitsActionButton(t.clientX, t.clientY)) continue;
       const hitSlot = this._checkWeaponSlotClick(tx * (canvas.width / rect.width), ty * (canvas.height / rect.height));
       const hitDash = this._checkDashButtonClick(tx, ty);
 
@@ -320,6 +340,19 @@ const Input = {
     if (container) container.style.display = 'none';
     if (base) base.style.opacity = '0';
     if (knob) knob.style.opacity = '0';
+  },
+
+  _touchHitsActionButton(clientX, clientY) {
+    const dashBtn = document.getElementById('mobile-dash-btn');
+    const attackBtn = document.getElementById('mobile-attack-btn');
+    for (const btn of [dashBtn, attackBtn]) {
+      if (!btn || btn.style.display === 'none') continue;
+      const rect = btn.getBoundingClientRect();
+      if (clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom) {
+        return true;
+      }
+    }
+    return false;
   },
 
   getMovement() {

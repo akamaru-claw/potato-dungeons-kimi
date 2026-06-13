@@ -381,9 +381,11 @@ const UI = {
     document.getElementById('weapon-bar').style.display = 'none';
     document.getElementById('hud').style.display = 'none';
     document.getElementById('hud-dash').style.display = 'none';
-    // Hide mobile dash button outside gameplay
+    // Hide mobile action buttons outside gameplay
     const dashBtn = document.getElementById('mobile-dash-btn');
     if (dashBtn) dashBtn.style.display = 'none';
+    const attackBtn = document.getElementById('mobile-attack-btn');
+    if (attackBtn) attackBtn.style.display = 'none';
     this.hideWeaponPanel();
     this.stopMenuCanvas();
   },
@@ -587,10 +589,12 @@ const UI = {
     this._hideAll();
     document.getElementById('btn-pause')?.classList.add('visible');
     document.getElementById('hud').style.display = 'flex';
-    // Show mobile dash button if on touch device
-    if (Input.isMobile()) {
+    const isTouch = ('ontouchstart' in window) || window.matchMedia('(pointer: coarse)').matches;
+    if (isTouch) {
       const dashBtn = document.getElementById('mobile-dash-btn');
       if (dashBtn) dashBtn.style.display = 'flex';
+      const attackBtn = document.getElementById('mobile-attack-btn');
+      if (attackBtn) attackBtn.style.display = 'flex';
     }
     const bar = document.getElementById('weapon-bar');
     if (bar) bar.style.display = 'flex';
