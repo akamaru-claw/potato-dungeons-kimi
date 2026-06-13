@@ -59,6 +59,7 @@ const Player = {
       buildTimeline: [], // Track weapon/relic acquisitions: [{floor, type, name, icon, tier?}]
       kills: 0,
       gold: 0,
+      totalDamageDealt: 0,
       tookDamageThisFloor: false,
       relics: [],
       dashCooldown: 0,
@@ -80,6 +81,8 @@ const Player = {
       getMaxHp() { return CONFIG.PLAYER.BASE_HP + this.maxHpBonus; },
 
       applyCharacterStats() {
+        if (this._characterStatsApplied) return;
+        this._characterStatsApplied = true;
         const charKey = this.skin;
         const charDef = CONFIG.CHARACTERS?.[charKey];
         if (!charDef || !charDef.stats) return;

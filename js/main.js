@@ -33,7 +33,11 @@ const Game = {
     Multiplayer.disconnect();
     this.state = 'PLAYING';
     this.player = Player.create();
+    // Reset base limits before applying character modifiers to avoid stacking on restart
+    CONFIG.PLAYER.MAX_WEAPONS = 6;
+    CONFIG.PLAYER.DASH_COOLDOWN = 1.2;
     this.player.applyCharacterStats();
+    this.totalDamageDealt = 0;
     this.pendingReward = null;
     this.xpOrbs = [];
     this.multiplayerDoorTriggered = false;
@@ -65,6 +69,11 @@ const Game = {
   startCoop(roomData) {
     this.state = 'PLAYING';
     this.player = Player.create();
+    // Reset base limits before applying character modifiers to avoid stacking on restart
+    CONFIG.PLAYER.MAX_WEAPONS = 6;
+    CONFIG.PLAYER.DASH_COOLDOWN = 1.2;
+    this.player.applyCharacterStats();
+    this.totalDamageDealt = 0;
     this.pendingReward = null;
     this.xpOrbs = [];
     this.multiplayerDoorTriggered = false;
@@ -165,7 +174,14 @@ const Game = {
 
   resumeGame() { this.state = 'PLAYING'; UI.hidePause(); UI.showGame(); },
 
-  gameOver() { this.state = 'GAMEOVER'; this._debugBanner = null; UI.showGameOver(this.player, Dungeon.currentFloor); },
+  gameOver() {
+    this.state = 'GAMEOVER';
+    this._debugBanner = null;
+    const floor = Dungeon.currentFloor || 1;
+    const difficulty = floor < 20 ? 'Normal' : 'Hard';
+    if (this.player) this.player.difficultyLabel = difficulty;
+    UI.showGameOver(this.player, floor);
+  },
 
   _debugBanner: null,
   _debugBannerTimer: 0,
@@ -282,6 +298,8 @@ const Game = {
     Renderer.updateCamera(player, dt);
     // Track time
     if (this.player) this.player.timeSurvived = (this.player.timeSurvived || 0) + dt;
+    // Mirror player's total damage counter on Game for easy access by UI
+    if (this.player) this.totalDamageDealt = this.player.totalDamageDealt || 0;
 
     // Multiplayer sync (throttled)
     if (Multiplayer.connected) {
@@ -394,7 +412,9 @@ const Game = {
             if (charDef2?.ability === 'devil_bargain') devilDmgBonus += player.weapons.length * 0.05;
             const dmgMult = (finalCrit ? 2 : 1) * (1 + (player.stats.damage || 0) / 100) * devilDmgBonus;
             const dmg = Math.round(p.damage * dmgMult);
+            const hpBefore = e.hp;
             e.takeDamage(dmg, dir, p.knockback, finalCrit);
+            if (this.player) this.player.totalDamageDealt = (this.player.totalDamageDealt || 0) + Math.min(dmg, Math.max(0, hpBefore));
             // Send damage text to client
             if (Multiplayer.connected) {
               Multiplayer.send({ type: 'damageText', x: e.x, y: e.y - e.size, text: (isCrit ? '💥 ' : '') + '-' + dmg, color: isCrit ? CONFIG.COLORS.CRIT_COLOR : '#fff', size: isCrit ? 24 : 16, particle: !e.alive ? 'death' : 'hit', particleColor: e.color });

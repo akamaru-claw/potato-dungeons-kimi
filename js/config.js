@@ -15,19 +15,19 @@ const CONFIG = {
   CAMERA: { MIN_ZOOM: 0.5, MAX_ZOOM: 2.0, DEFAULT_ZOOM: 1.0, SMOOTH_SPEED: 5 },
 
   // Player
-  PLAYER: { SIZE: 18, BASE_SPEED: 180, BASE_HP: 12, INVINCIBILITY_TIME: 0.5, MAX_WEAPONS: 6, DODGE_BASE: 5, DASH_DURATION: 0.15, DASH_IFRAMES: 0.3, DASH_COOLDOWN: 1.5, DASH_SPEED: 600 },
+  PLAYER: { SIZE: 18, BASE_SPEED: 195, BASE_HP: 15, INVINCIBILITY_TIME: 0.5, MAX_WEAPONS: 6, DODGE_BASE: 5, DASH_DURATION: 0.15, DASH_IFRAMES: 0.3, DASH_COOLDOWN: 1.2, DASH_SPEED: 600 },
 
   // XP & Leveling
   XP: { BASE_TO_LEVEL: 8, SCALING: 1.35, ORB_SIZE: 6, ORB_SPEED: 350 },
 
   // Gold (limited in dungeons — dropped by enemies)
-  GOLD: { DROP_CHANCE: 0.25, BASE_DROP: 1 },
+  GOLD: { DROP_CHANCE: 0.35, BASE_DROP: 1 },
 
   // Tower / Floor progression
   TOWER: {
     START_FLOOR: 1,
-    BOSS_EVERY: 10,       // Boss every 10 floors
-    FLOOR_TIME_LIMIT: 60, // seconds per floor (0 = no limit)
+    BOSS_EVERY: 5,        // Boss every 5 floors
+    FLOOR_TIME_LIMIT: 0,   // seconds per floor (0 = no limit)
     ENEMIES_BASE: 5,      // starting enemy count
     ENEMIES_PER_FLOOR: 2, // additional enemies per floor
     HP_SCALING: 0.15,     // enemy HP increase per floor
@@ -77,19 +77,19 @@ const CONFIG = {
   // Enemy definitions
   ENEMY_DEFS: {
     // --- Stone Dungeon ---
-    skeleton:    { name: 'Skelett',    icon: '💀', hp: 8,  damage: 2, speed: 70,  size: 16, xp: 3, color: '#c8c8b0', colorDark: '#8a8a70', shape: 'circle', weight: 3, minFloor: 1, attackCooldown: 0 },
-    slime:       { name: 'Schleim',    icon: '🟢', hp: 5,  damage: 1, speed: 50,  size: 14, xp: 2, color: '#66cc66', colorDark: '#337733', shape: 'circle', weight: 3, minFloor: 1, attackCooldown: 0 },
-    bat:         { name: 'Fledermaus', icon: '🦇', hp: 3,  damage: 1, speed: 130, size: 10, xp: 2, color: '#8866aa', colorDark: '#553377', shape: 'triangle', weight: 2, minFloor: 1, attackCooldown: 0 },
+    skeleton:    { name: 'Skelett',    icon: '💀', hp: 10, damage: 2, speed: 70,  size: 16, xp: 3, color: '#c8c8b0', colorDark: '#8a8a70', shape: 'circle', weight: 3, minFloor: 1, attackCooldown: 0 },
+    slime:       { name: 'Schleim',    icon: '🟢', hp: 7,  damage: 1, speed: 50,  size: 14, xp: 2, color: '#66cc66', colorDark: '#337733', shape: 'circle', weight: 3, minFloor: 1, attackCooldown: 0 },
+    bat:         { name: 'Fledermaus', icon: '🦇', hp: 4,  damage: 1, speed: 130, size: 10, xp: 2, color: '#8866aa', colorDark: '#553377', shape: 'triangle', weight: 2, minFloor: 1, attackCooldown: 0 },
     // --- Cave ---
-    spider:      { name: 'Spinne',     icon: '🕷️', hp: 10, damage: 3, speed: 90,  size: 14, xp: 4, color: '#444433', colorDark: '#222211', shape: 'circle', weight: 3, minFloor: 10, attackCooldown: 0 },
-    cave_crawler:{ name: 'Höhlenkrabbler', icon: '🪲', hp: 15, damage: 2, speed: 60,  size: 18, xp: 5, color: '#556644', colorDark: '#334422', shape: 'square', weight: 2, minFloor: 10, attackCooldown: 0 },
+    spider:      { name: 'Spinne',     icon: '🕷️', hp: 12, damage: 3, speed: 90,  size: 14, xp: 4, color: '#444433', colorDark: '#222211', shape: 'circle', weight: 3, minFloor: 10, attackCooldown: 0 },
+    cave_crawler:{ name: 'Höhlenkrabbler', icon: '🪲', hp: 18, damage: 2, speed: 60,  size: 18, xp: 5, color: '#556644', colorDark: '#334422', shape: 'square', weight: 2, minFloor: 10, attackCooldown: 0 },
     // --- Fortress ---
-    knight:      { name: 'Ritter',     icon: '🛡️', hp: 25, damage: 5, speed: 55,  size: 20, xp: 8, color: '#8888aa', colorDark: '#555577', shape: 'square', weight: 3, minFloor: 20, attackCooldown: 0 },
+    knight:      { name: 'Ritter',     icon: '🛡️', hp: 30, damage: 5, speed: 55,  size: 20, xp: 8, color: '#8888aa', colorDark: '#555577', shape: 'square', weight: 3, minFloor: 20, attackCooldown: 0 },
     archer:      { name: 'Bogenschütze', icon: '🏹', hp: 12, damage: 4, speed: 65,  size: 14, xp: 6, color: '#aa8866', colorDark: '#775533', shape: 'diamond', weight: 2, minFloor: 20, ranged: true, attackRange: 250, projectileSpeed: 200, attackCooldown: 2.0 },
     // --- Nether ---
     blaze:       { name: 'Lohe',       icon: '🔥', hp: 20, damage: 6, speed: 60,  size: 16, xp: 10, color: '#ffaa00', colorDark: '#cc7700', shape: 'diamond', weight: 3, minFloor: 30, ranged: true, attackRange: 200, projectileSpeed: 180, attackCooldown: 1.5 },
     wither_skeleton:{ name: 'Wither-Skelett', icon: '☠️', hp: 35, damage: 8, speed: 70, size: 22, xp: 12, color: '#333344', colorDark: '#111122', shape: 'triangle', weight: 2, minFloor: 30, attackCooldown: 0 },
-    ghast:       { name: 'Ghast',      icon: '👻', hp: 15, damage: 10, speed: 40, size: 24, xp: 15, color: '#ddddcc', colorDark: '#aaaaaa', shape: 'circle', weight: 1, minFloor: 30, ranged: true, attackRange: 350, projectileSpeed: 150, attackCooldown: 3.0 },
+    ghast:       { name: 'Ghast',      icon: '👻', hp: 18, damage: 10, speed: 40, size: 24, xp: 15, color: '#ddddcc', colorDark: '#aaaaaa', shape: 'circle', weight: 1, minFloor: 30, ranged: true, attackRange: 350, projectileSpeed: 150, attackCooldown: 3.0 },
     // --- End ---
     enderman:    { name: 'Enderman',   icon: '👁️', hp: 30, damage: 7, speed: 120, size: 20, xp: 15, color: '#1a1a2a', colorDark: '#0a0a1a', shape: 'diamond', weight: 3, minFloor: 40, charges: true, chargeSpeed: 300, chargeCooldown: 3 },
     shulker:     { name: 'Shulker',    icon: '📦', hp: 25, damage: 5, speed: 20,  size: 18, xp: 12, color: '#9955cc', colorDark: '#663399', shape: 'square', weight: 2, minFloor: 40, ranged: true, attackRange: 200, projectileSpeed: 120, attackCooldown: 2.5 },
@@ -103,13 +103,13 @@ const CONFIG = {
 
   // Weapon definitions — compatible with WeaponSystem (baseDamage, pellets, etc.)
   WEAPON_DEFS: {
-    knife:       { icon: '🗡️', name: 'Messer',    type: 'melee',  baseDamage: 3,  attackSpeed: 0.3,  range: 55,  arc: 1.2,  knockback: 2,  tier: 0, projectileColor: '#ddd', projectileSize: 3, projectileSpeed: 350, spread: 0.1, tags: ['blade'] },
-    sword:       { icon: '⚔️', name: 'Schwert',   type: 'melee',  baseDamage: 7,  attackSpeed: 0.5,  range: 75,  arc: 1.0,  knockback: 4,  tier: 1, projectileColor: '#aef', projectileSize: 3, projectileSpeed: 350, spread: 0.1, tags: ['blade'] },
-    club:        { icon: '🏏', name: 'Keule',     type: 'melee',  baseDamage: 12, attackSpeed: 0.8,  range: 65,  arc: 0.8,  knockback: 8,  tier: 1, projectileColor: '#fa4', projectileSize: 4, projectileSpeed: 300, spread: 0.15, tags: ['heavy'] },
-    hammer:      { icon: '🔨', name: 'Hammer',    type: 'melee',  baseDamage: 18, attackSpeed: 1.0,  range: 70,  arc: 0.9,  knockback: 12, tier: 3, projectileColor: '#fa4', projectileSize: 5, projectileSpeed: 250, spread: 0.15, tags: ['heavy'] },
-    pistol:      { icon: '🔫', name: 'Pistole',   type: 'ranged', baseDamage: 5,  attackSpeed: 0.35, range: 250, projectileSpeed: 350, pierce: 0, tier: 0, projectileColor: '#ff8', projectileSize: 3, spread: 0.05, tags: ['ranged'] },
-    shotgun:     { icon: '💥', name: 'Schrotflinte', type: 'ranged', baseDamage: 8, attackSpeed: 0.7, range: 120, projectileSpeed: 250, pierce: 0, tier: 2, pellets: 3, spread: 0.4, projectileColor: '#fa4', projectileSize: 3, tags: ['ranged'] },
-    smg:         { icon: '🔧', name: 'SMG',       type: 'ranged', baseDamage: 3,  attackSpeed: 0.12, range: 200, projectileSpeed: 400, pierce: 0, tier: 1, projectileColor: '#8ff', projectileSize: 2, spread: 0.08, tags: ['ranged', 'fire'] },
+    knife:       { icon: '🗡️', name: 'Messer',    type: 'melee',  baseDamage: 3,  attackSpeed: 0.3,  range: 65,  arc: 1.2,  knockback: 2,  tier: 0, projectileColor: '#ddd', projectileSize: 3, projectileSpeed: 350, spread: 0.1, tags: ['blade'] },
+    sword:       { icon: '⚔️', name: 'Schwert',   type: 'melee',  baseDamage: 7,  attackSpeed: 0.5,  range: 85,  arc: 1.0,  knockback: 4,  tier: 1, projectileColor: '#aef', projectileSize: 3, projectileSpeed: 350, spread: 0.1, tags: ['blade'] },
+    club:        { icon: '🏏', name: 'Keule',     type: 'melee',  baseDamage: 12, attackSpeed: 0.8,  range: 75,  arc: 0.8,  knockback: 8,  tier: 1, projectileColor: '#fa4', projectileSize: 4, projectileSpeed: 300, spread: 0.15, tags: ['heavy'] },
+    hammer:      { icon: '🔨', name: 'Hammer',    type: 'melee',  baseDamage: 18, attackSpeed: 1.0,  range: 80,  arc: 0.9,  knockback: 12, tier: 3, projectileColor: '#fa4', projectileSize: 5, projectileSpeed: 250, spread: 0.15, tags: ['heavy'] },
+    pistol:      { icon: '🔫', name: 'Pistole',   type: 'ranged', baseDamage: 6,  attackSpeed: 0.35, range: 250, projectileSpeed: 350, pierce: 0, tier: 0, projectileColor: '#ff8', projectileSize: 3, spread: 0.05, tags: ['ranged'] },
+    shotgun:     { icon: '💥', name: 'Schrotflinte', type: 'ranged', baseDamage: 10, attackSpeed: 0.7, range: 120, projectileSpeed: 250, pierce: 0, tier: 2, pellets: 3, spread: 0.4, projectileColor: '#fa4', projectileSize: 3, tags: ['ranged'] },
+    smg:         { icon: '🔧', name: 'SMG',       type: 'ranged', baseDamage: 4,  attackSpeed: 0.12, range: 200, projectileSpeed: 400, pierce: 0, tier: 1, projectileColor: '#8ff', projectileSize: 2, spread: 0.08, tags: ['ranged', 'fire'] },
     sniper:      { icon: '🎯', name: 'Sniper',    type: 'ranged', baseDamage: 20, attackSpeed: 1.2, range: 450, projectileSpeed: 600, pierce: 1, tier: 2, projectileColor: '#f88', projectileSize: 4, spread: 0.02, tags: ['ranged'] },
     shuriken:    { icon: '⭐', name: 'Shuriken',  type: 'ranged', baseDamage: 4,  attackSpeed: 0.15, range: 180, projectileSpeed: 300, pierce: 2, tier: 2, projectileColor: '#af4', projectileSize: 4, spinning: true, spread: 0.2, tags: ['blade', 'nature'] },
     crossbow:    { icon: '🏹', name: 'Armbrust',  type: 'ranged', baseDamage: 14, attackSpeed: 0.9, range: 300, projectileSpeed: 450, pierce: 1, tier: 2, projectileColor: '#faf', projectileSize: 3, spread: 0.05, tags: ['ranged'] },

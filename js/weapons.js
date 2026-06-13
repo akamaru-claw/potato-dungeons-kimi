@@ -5,7 +5,7 @@ const WeaponSystem = {
   create(defKey, tier = 0) {
     const def = CONFIG.WEAPON_DEFS[defKey];
     if (!def) return null;
-    return { defKey, tier, cooldown: 0, angle: 0, swingProgress: -1, def: { ...def } };
+    return { defKey, tier, cooldown: 0, angle: 0, swingProgress: -1, kills: 0, damageDone: 0, def: { ...def } };
   },
 
   addWeapon(player, weapon) {
@@ -97,7 +97,11 @@ const WeaponSystem = {
         const dir = Utils.vecNormalize(Utils.vecSub(e, player));
         if (isHost) {
           // Host applies damage directly
+          const hpBefore = e.hp;
           e.takeDamage(baseDmg, dir, weapon.def.knockback, isCrit);
+          const actualDamage = Math.min(baseDmg, Math.max(0, hpBefore));
+          weapon.damageDone += actualDamage;
+          if (e.hp <= 0 && hpBefore > 0) weapon.kills++;
           // Send damage text to client
           if (Multiplayer.connected) {
             Multiplayer.send({ type: 'damageText', x: e.x, y: e.y - e.size, text: (isCrit ? '💥 ' : '') + '-' + Math.round(baseDmg), color: isCrit ? CONFIG.COLORS.CRIT_COLOR : '#fff', size: isCrit ? 24 : 16, particle: !e.alive ? 'death' : 'hit', particleColor: e.color });
@@ -116,6 +120,8 @@ const WeaponSystem = {
           if (isCrit) FloatingText.add(e.x, e.y - e.size, '💥', CONFIG.COLORS.CRIT_COLOR, 20);
           FloatingText.add(e.x, e.y - e.size, '-' + Math.round(baseDmg), isCrit ? CONFIG.COLORS.CRIT_COLOR : '#fff', isCrit ? 24 : 16);
           ParticleSystem.hit(e.x, e.y, e.color);
+          // Client can approximate contribution locally; will be overwritten by host sync
+          weapon.damageDone += baseDmg;
         }
       }
     }
